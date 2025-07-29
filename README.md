@@ -7,7 +7,7 @@ Simulate common business problems asked in data analyst interviews and solve the
 
 ---
 
-## 🧠 Problem Solved
+## 🧠 Problem Solved 1
 
 > **Find the top 3 most active customers based on rental count, and assign their rank using the RANK() function.**
 
@@ -50,14 +50,54 @@ LIMIT 3;
 - String manipulation using CONCAT()
 - JOIN, GROUP BY, and filtering
 ```
+
+## 🧠 Problem Solved 2
+🎯 Objective: Find which films are most popular among customers, and rank them based on number of rentals — even if rental counts are tied.
+
+## 💻 SQL Query
+
+```sql
+WITH ranked_films AS (
+  SELECT 
+    f.title, 
+    COUNT(*) AS rental_count,
+    DENSE_RANK() OVER (ORDER BY COUNT(*) DESC) AS film_rank
+  FROM film f
+  INNER JOIN inventory i ON f.film_id = i.film_id
+  INNER JOIN rental r ON i.inventory_id = r.inventory_id
+  GROUP BY f.film_id, f.title
+)
+SELECT *
+FROM ranked_films
+WHERE film_rank <= 3;
+```
+
+## 📸 Output Preview
+```Top 3 most rented films with ranking:```
+
+![Logo](https://github.com/aniket-ds-ai/sql-window-functions-mavenmovies/blob/main/output/top_customers_rank.png)
+
+## ✅ SQL Concepts Used
+```
+- DENSE_RANK() OVER (ORDER BY ...)
+- Multiple INNER JOINs
+- Aggregate function COUNT()
+- CTE (WITH clause)
+- Filtering using WHERE on window function result
+```
+
+
+
 ## 📁 Folder Structure
 ```sql
 
 sql-window-functions-mavenmovies/
 ├── queries/
 │   └── top_customers_rank.sql
+│   └── top_films_rank.sql
 ├── output/
 │   └── top_customers_rank.png
+│   └── top_films_rank.png
 ├── database/
 │   └── mavenmovies_schema.sql 
 ├── README.md
